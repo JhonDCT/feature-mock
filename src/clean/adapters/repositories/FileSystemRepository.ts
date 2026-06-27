@@ -26,10 +26,15 @@ export interface FileSystemRepository {
     loadResponses(feature: string, ac: string): Promise<MockEntry[]>
 }
 
+export interface FileSystemRepo {
+    readdirName(path: string, predicate: (e: Dirent) => boolean): Promise<string[]>;
+}
+
 export function fileSystemRepository(): FileSystemRepository {
     return {
         listsFeatures: () =>
             readdirNames(MOCKS_DIR, isFeatureDirectory),
+        // listsFeatures: () => listFeaturesController(),
 
         listsAcceptanceCriteria: (feature: string) =>
             readdirNames(resolve(MOCKS_DIR, feature), isDirectory),
