@@ -1,0 +1,21 @@
+{
+    "responses": [
+        {
+            "request": {
+                "method": "GET",
+                "path": "/api/v1/user/profile"
+            },
+            "response": {
+                "status": 200,
+                "body": {
+                    "id": "usr-001",
+                    "name": "Jane Doe",
+                    "email": "jane.doe@example.com",
+                    "avatar": "https://example.com/avatars/usr-001.png",
+                    "tier": "PREMIUM",
+                    "createdAt": "2024-01-15T10:00:00Z"
+                }
+            }
+        }
+    ]
+}

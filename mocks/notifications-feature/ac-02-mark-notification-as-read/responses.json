@@ -1,0 +1,46 @@
+{
+    "responses": [
+        {
+            "request": {
+                "method": "PATCH",
+                "path": "/api/v1/notifications/notif-01"
+            },
+            "response": {
+                "status": 200,
+                "body": {
+                    "id": "notif-01",
+                    "read": true,
+                    "updatedAt": "2024-06-27T15:10:00Z"
+                }
+            }
+        },
+        {
+            "request": {
+                "method": "GET",
+                "path": "/api/v1/notifications"
+            },
+            "response": {
+                "status": 200,
+                "body": {
+                    "items": [
+                        {
+                            "id": "notif-01",
+                            "title": "Your order has been confirmed",
+                            "body": "Order #ord-7890 is being prepared.",
+                            "read": true,
+                            "createdAt": "2024-06-27T15:01:00Z"
+                        },
+                        {
+                            "id": "notif-02",
+                            "title": "Flash sale — 20% off today",
+                            "body": "Use code SAVE20 at checkout.",
+                            "read": false,
+                            "createdAt": "2024-06-27T09:00:00Z"
+                        }
+                    ],
+                    "unreadCount": 1
+                }
+            }
+        }
+    ]
+}

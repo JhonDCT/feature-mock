@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(bun run *)",
+      "Bash(bun src/index.ts)",
+      "Bash(exit 0)",
+      "Bash(bun *)"
+    ]
+  }
+}
