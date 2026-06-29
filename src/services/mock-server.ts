@@ -1,4 +1,4 @@
-import type { MockEntry } from '../clean/core/entities/MockResponse'
+import type { MockEntry } from '../utils/fs'
 
 const PORT = 3000
 
@@ -9,12 +9,21 @@ const findMock = (entries: MockEntry[], method: string, pathname: string): MockE
 
 const handleRequest = (entries: MockEntry[]) => (req: Request): Response => {
     const { pathname } = new URL(req.url)
+
     const mock = findMock(entries, req.method, pathname)
     if (!mock) return new Response('Not found', { status: 404 })
+
     return Response.json(mock.response.body, { status: mock.response.status })
 }
 
 export const startMockServer = (entries: MockEntry[]): MockServer => {
-    const server = Bun.serve({ port: PORT, fetch: handleRequest(entries) })
-    return { port: server.port ?? PORT, stop: () => server.stop() }
+    const server = Bun.serve({
+        port: PORT,
+        fetch: handleRequest(entries)
+    })
+
+    return {
+        port: server.port ?? PORT,
+        stop: () => server.stop()
+    }
 }
