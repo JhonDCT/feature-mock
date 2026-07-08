@@ -1,15 +1,82 @@
 # feature-mock
 
-To install dependencies:
+A CLI mock server with an interactive TUI for feature-driven development. Select a feature and acceptance criteria scenario from your `mocks` folder and instantly spin up a local HTTP server with predefined responses.
 
-```bash
-bun install
+## Installation
+
+```sh
+bun add -g feature-mock
+# or
+npm install -g feature-mock
 ```
 
-To run:
+## Usage
 
-```bash
-bun run index.ts
+Run from your project root (expects a `mocks/` folder by default):
+
+```sh
+feature-mock
 ```
 
-This project was created using `bun init` in bun v1.3.14. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+Pass a custom path to your mocks folder:
+
+```sh
+feature-mock --dir ./path/to/mocks
+feature-mock -d ./path/to/mocks
+feature-mock ./path/to/mocks
+```
+
+An interactive TUI will let you pick a feature and acceptance criteria scenario. The mock server starts on `http://localhost:3000`.
+
+## Mocks folder structure
+
+```
+mocks/
+└── user-profile-feature/
+│   ├── ac-01-get-profile-successfully/
+│   │   └── responses.json
+│   ├── ac-02-update-profile-successfully/
+│   │   └── responses.json
+│   └── ac-03-update-profile-validation-error/
+│       └── responses.json
+└── sign-in-feature/
+    ├── ac-01-sign-in-successfully/
+    │   └── responses.json
+    └── ac-02-sign-in-failed/
+        └── responses.json
+```
+
+- Feature folders must end with `-feature`
+- Each subfolder is an acceptance criteria scenario
+- Each scenario contains a `responses.json` file
+
+## `responses.json` schema
+
+```json
+{
+  "responses": [
+    {
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/user/profile"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": "usr-001",
+          "name": "Jane Doe",
+          "email": "jane.doe@example.com"
+        }
+      }
+    }
+  ]
+}
+```
+
+## Requirements
+
+- [Bun](https://bun.com) >= 1.0.0
+
+## License
+
+MIT

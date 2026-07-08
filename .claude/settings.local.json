@@ -4,7 +4,11 @@
       "Bash(bun run *)",
       "Bash(bun src/index.ts)",
       "Bash(exit 0)",
-      "Bash(bun *)"
+      "Bash(bun *)",
+      "Bash(lsof -ti:3000)",
+      "Bash(xargs kill -9)",
+      "Bash(npm whoami *)",
+      "Bash(bunx npm *)"
     ]
   }
 }
