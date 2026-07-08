@@ -1,8 +1,41 @@
 {
   "name": "feature-mock",
-  "module": "src/index.ts",
+  "version": "1.0.0",
+  "description": "CLI mock server with TUI for feature-driven development",
   "type": "module",
-  "private": true,
+  "module": "dist/index.js",
+  "main": "dist/index.js",
+  "bin": {
+    "feature-mock": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "start": "bun src/index.ts",
+    "dev": "bun --hot bin/cli.ts",
+    "build": "bun run scripts/build.ts",
+    "prepublishOnly": "bun run build"
+  },
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "keywords": [
+    "mock",
+    "feature",
+    "tui",
+    "cli",
+    "bun",
+    "acceptance-criteria",
+    "mock-server"
+  ],
+  "license": "MIT",
   "devDependencies": {
     "@types/bun": "latest"
   },
@@ -10,7 +43,6 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "@clack/prompts": "^1.6.0",
-    "fastify": "^5.8.5"
+    "@clack/prompts": "^1.6.0"
   }
 }
