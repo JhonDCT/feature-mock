@@ -1,5 +1,5 @@
 import type { Dirent } from 'node:fs';
-import { readdir } from 'node:fs/promises';
+import { readdir, readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 export type MockRequest = { method: string; path: string }
@@ -31,9 +31,8 @@ export const listsAcceptanceCriteria = (feature: string): Promise<string[]> =>
     readdirNames(resolve(mocksDir, feature), isDirectory)
 
 export const loadResponses = (feature: string, ac: string): Promise<MockEntry[]> =>
-    Bun.file(resolve(mocksDir, feature, ac, 'responses.json'))
-        .json()
-        .then((schema: ResponsesSchema) => schema.responses)
+    readFile(resolve(mocksDir, feature, ac, 'responses.json'), 'utf-8')
+        .then(text => (JSON.parse(text) as ResponsesSchema).responses)
         .catch(() => {
             throw new Error('Not found responses.json file')
         })
