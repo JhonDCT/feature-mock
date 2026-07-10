@@ -1,3 +1,4 @@
+import { createServer } from 'node:http'
 import type { MockEntry } from '../utils/fs'
 
 let PORT = 3000
@@ -11,23 +12,25 @@ export const setPort = (port: number): void => {
 const findMock = (entries: MockEntry[], method: string, pathname: string): MockEntry | undefined =>
     entries.find(e => e.request.method === method && e.request.path === pathname)
 
-const handleRequest = (entries: MockEntry[]) => (req: Request): Response => {
-    const { pathname } = new URL(req.url)
-
-    const mock = findMock(entries, req.method, pathname)
-    if (!mock) return new Response('Not found', { status: 404 })
-
-    return Response.json(mock.response.body, { status: mock.response.status })
-}
-
 export const startMockServer = (entries: MockEntry[]): MockServer => {
-    const server = Bun.serve({
-        port: PORT,
-        fetch: handleRequest(entries)
+    const server = createServer((req, res) => {
+        const { pathname } = new URL(req.url!, `http://localhost:${PORT}`)
+        const mock = findMock(entries, req.method!, pathname)
+
+        if (!mock) {
+            res.writeHead(404)
+            res.end('Not found')
+            return
+        }
+
+        res.writeHead(mock.response.status, { 'Content-Type': 'application/json' })
+        res.end(JSON.stringify(mock.response.body))
     })
 
+    server.listen(PORT)
+
     return {
-        port: server.port ?? PORT,
-        stop: () => server.stop()
+        port: PORT,
+        stop: () => server.close()
     }
 }
