@@ -8,6 +8,7 @@ export type MockEntry = { request: MockRequest; response: MockResponse }
 export type ResponsesSchema = { responses: MockEntry[] }
 
 const FEATURE_SUFFIX = '-feature'
+const SHARED_DIR = 'shared'
 
 let mocksDir = resolve(process.cwd(), 'mocks')
 
@@ -30,9 +31,24 @@ export const listsFeatures = (): Promise<string[]> =>
 export const listsAcceptanceCriteria = (feature: string): Promise<string[]> =>
     readdirNames(resolve(mocksDir, feature), isDirectory)
 
-export const loadResponses = (feature: string, ac: string): Promise<MockEntry[]> =>
-    readFile(resolve(mocksDir, feature, ac, 'responses.json'), 'utf-8')
+const readResponsesFile = (...segments: string[]): Promise<MockEntry[]> =>
+    readFile(resolve(mocksDir, ...segments, 'responses.json'), 'utf-8')
         .then(text => (JSON.parse(text) as ResponsesSchema).responses)
-        .catch(() => {
-            throw new Error('Not found responses.json file')
-        })
+
+const loadSharedResponses = (): Promise<MockEntry[]> =>
+    readResponsesFile(SHARED_DIR).catch(() => [])
+
+const sameEndpoint = (a: MockEntry, b: MockEntry): boolean =>
+    a.request.method === b.request.method && a.request.path === b.request.path
+
+export const loadResponses = async (feature: string, ac: string): Promise<MockEntry[]> => {
+    const acEntries = await readResponsesFile(feature, ac).catch(() => {
+        throw new Error('Not found responses.json file')
+    })
+    const sharedEntries = await loadSharedResponses()
+
+    return [
+        ...acEntries,
+        ...sharedEntries.filter(shared => !acEntries.some(entry => sameEndpoint(entry, shared))),
+    ]
+}
