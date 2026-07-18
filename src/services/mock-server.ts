@@ -18,7 +18,7 @@ const CORS_HEADERS = {
 const findMock = (entries: MockEntry[], method: string, pathname: string): MockEntry | undefined =>
     entries.find(e => e.request.method === method && e.request.path === pathname)
 
-export const startMockServer = (entries: MockEntry[]): MockServer => {
+export const startMockServer = (entries: MockEntry[]): Promise<MockServer> => {
     const server = createServer((req, res) => {
         if (req.method === 'OPTIONS') {
             res.writeHead(204, CORS_HEADERS)
@@ -39,10 +39,16 @@ export const startMockServer = (entries: MockEntry[]): MockServer => {
         res.end(JSON.stringify(mock.response.body))
     })
 
-    server.listen(PORT)
+    return new Promise((resolvePromise, reject) => {
+        server.once('error', (error: NodeJS.ErrnoException) => {
+            reject(error.code === 'EADDRINUSE'
+                ? new Error(`Port ${PORT} is already in use. Try another one with --port <number>.`)
+                : error)
+        })
 
-    return {
-        port: PORT,
-        stop: () => server.close()
-    }
+        server.listen(PORT, () => resolvePromise({
+            port: PORT,
+            stop: () => server.close()
+        }))
+    })
 }

@@ -33,6 +33,15 @@ feature-mock --port 8080
 feature-mock -p 8080
 ```
 
+Other flags:
+
+```sh
+feature-mock --help      # usage and options
+feature-mock --version   # installed version
+```
+
+If no mocks folder exists yet, the CLI offers to scaffold an example structure for you. While the server is running, the `↻ Reload scenario` option re-reads your `responses.json` and restarts, so you can edit mocks without leaving the TUI.
+
 An interactive TUI will let you pick a feature and acceptance criteria scenario. The mock server starts on `http://localhost:3000` with CORS enabled (`Access-Control-Allow-Origin: *`), so you can call it directly from a browser app.
 
 ## Mocks folder structure

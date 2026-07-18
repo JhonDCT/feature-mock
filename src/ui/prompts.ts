@@ -1,10 +1,11 @@
 import { autocomplete, cancel, isCancel, select, spinner } from '@clack/prompts'
 import { stopActiveServer } from '../services/state-manager'
 import type { MockEntry } from '../utils/fs'
-import { listsAcceptanceCriteria, listsFeatures, loadResponses } from '../utils/fs'
+import { getMocksDir, listsAcceptanceCriteria, listsFeatures, loadResponses } from '../utils/fs'
 
 export const BACK_FEATURE = '__back_feature__'
 export const CHANGE_AC = '__change_ac__'
+export const RELOAD = '__reload__'
 export const EXIT = '__exit__'
 
 const AUTOCOMPLETE_THRESHOLD = 7
@@ -16,6 +17,11 @@ export const changeAcOption = {
     value: CHANGE_AC,
     label: '← Change acceptance criteria',
     hint: 'Restart server with a different scenario',
+}
+export const reloadOption = {
+    value: RELOAD,
+    label: '↻ Reload scenario',
+    hint: 'Re-read responses.json and restart the server',
 }
 export const exitOption = { value: EXIT, label: '✖ Exit', hint: 'Stop server and quit' }
 
@@ -52,7 +58,7 @@ const withCounts = <T>(
 
 export const promptFeature = async (): Promise<string> => {
     const features = await listsFeatures()
-    if (!features.length) throw new Error('Not found features')
+    if (!features.length) throw new Error(`No "*-feature" folders found in ${getMocksDir()}`)
 
     const options = await withCounts(features, listsAcceptanceCriteria, 'scenario')
 
@@ -61,7 +67,7 @@ export const promptFeature = async (): Promise<string> => {
 
 export const promptAcceptanceCriteria = async (feature: string): Promise<string> => {
     const acs = await listsAcceptanceCriteria(feature)
-    if (!acs.length) throw new Error('Not found acceptance criterias')
+    if (!acs.length) throw new Error(`No scenario folders found in ${getMocksDir()}/${feature}`)
 
     const options = await withCounts(acs, ac => loadResponses(feature, ac), 'endpoint')
 
