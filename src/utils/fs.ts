@@ -16,6 +16,8 @@ export const setMocksDir = (dir: string): void => {
     mocksDir = resolve(dir)
 }
 
+export const getMocksDir = (): string => mocksDir
+
 const isFeatureDirectory = (entry: Dirent): boolean =>
     entry.isDirectory() && entry.name.endsWith(FEATURE_SUFFIX)
 

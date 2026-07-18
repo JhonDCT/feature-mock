@@ -1,0 +1,33 @@
+{
+  "responses": [
+    {
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/user/profile"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": "usr-001",
+          "name": "Jane Doe",
+          "email": "jane.doe@example.com"
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "PUT",
+        "path": "/api/v1/user/profile"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": "usr-001",
+          "name": "Jane Smith",
+          "email": "jane.smith@example.com",
+          "updatedAt": "2026-07-18T09:00:00Z"
+        }
+      }
+    }
+  ]
+}

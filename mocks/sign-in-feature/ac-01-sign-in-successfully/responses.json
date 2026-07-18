@@ -1,0 +1,32 @@
+{
+  "responses": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/auth/sign-in"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "token": "eyJhbGciOiJIUzI1NiJ9.mock-token",
+          "refreshToken": "mock-refresh-token",
+          "expiresIn": 3600
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/auth/session"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "userId": "usr-001",
+          "email": "jane.doe@example.com",
+          "roles": ["user"]
+        }
+      }
+    }
+  ]
+}
