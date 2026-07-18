@@ -26,12 +26,21 @@ feature-mock -d ./path/to/mocks
 feature-mock ./path/to/mocks
 ```
 
-An interactive TUI will let you pick a feature and acceptance criteria scenario. The mock server starts on `http://localhost:3000`.
+Pass a custom port (defaults to `3000`):
+
+```sh
+feature-mock --port 8080
+feature-mock -p 8080
+```
+
+An interactive TUI will let you pick a feature and acceptance criteria scenario. The mock server starts on `http://localhost:3000` with CORS enabled (`Access-Control-Allow-Origin: *`), so you can call it directly from a browser app.
 
 ## Mocks folder structure
 
 ```
 mocks/
+├── shared/
+│   └── responses.json
 └── user-profile-feature/
 │   ├── ac-01-get-profile-successfully/
 │   │   └── responses.json
@@ -49,6 +58,7 @@ mocks/
 - Feature folders must end with `-feature`
 - Each subfolder is an acceptance criteria scenario
 - Each scenario contains a `responses.json` file
+- An optional `mocks/shared/responses.json` holds endpoints common to every scenario. Its entries are merged into whichever scenario you select; if the scenario defines the same `method` + `path`, the scenario's entry overrides the shared one.
 
 ## `responses.json` schema
 

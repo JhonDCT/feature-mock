@@ -1,0 +1,17 @@
+{
+  "responses": [
+    {
+      "request": {
+        "method": "POST",
+        "path": "/api/v1/auth/sign-in"
+      },
+      "response": {
+        "status": 401,
+        "body": {
+          "code": "INVALID_CREDENTIALS",
+          "message": "Email or password is incorrect"
+        }
+      }
+    }
+  ]
+}

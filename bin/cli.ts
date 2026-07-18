@@ -12,10 +12,14 @@ const mocksPath = dirFlagIndex !== -1
 if (mocksPath) setMocksDir(mocksPath)
 
 const portFlagIndex = args.findIndex(a => a === '--port' || a === '-p')
-const port = portFlagIndex !== -1
-    ? Number(args[portFlagIndex + 1])
-    : 3000;
 
-if (portFlagIndex) setPort(port)
+if (portFlagIndex !== -1) {
+    const port = Number(args[portFlagIndex + 1])
+    if (!Number.isInteger(port) || port < 1 || port > 65535) {
+        console.error(`Invalid port: ${args[portFlagIndex + 1] ?? '(missing)'}`)
+        process.exit(1)
+    }
+    setPort(port)
+}
 
 await startCommand()

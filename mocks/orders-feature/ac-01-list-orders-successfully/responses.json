@@ -1,0 +1,50 @@
+{
+  "responses": [
+    {
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/orders"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "items": [
+            { "id": "ord-1001", "total": 59.9, "currency": "USD", "status": "delivered" },
+            { "id": "ord-1002", "total": 120, "currency": "USD", "status": "shipped" },
+            { "id": "ord-1003", "total": 15.5, "currency": "USD", "status": "pending" }
+          ],
+          "page": 1,
+          "totalPages": 1
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "GET",
+        "path": "/api/v1/orders/ord-1001"
+      },
+      "response": {
+        "status": 200,
+        "body": {
+          "id": "ord-1001",
+          "total": 59.9,
+          "currency": "USD",
+          "status": "delivered",
+          "items": [
+            { "sku": "SKU-42", "name": "Wireless Mouse", "quantity": 1, "price": 59.9 }
+          ]
+        }
+      }
+    },
+    {
+      "request": {
+        "method": "DELETE",
+        "path": "/api/v1/orders/ord-1003"
+      },
+      "response": {
+        "status": 204,
+        "body": null
+      }
+    }
+  ]
+}
