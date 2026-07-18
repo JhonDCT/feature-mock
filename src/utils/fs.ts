@@ -1,5 +1,5 @@
 import type { Dirent } from 'node:fs';
-import { readdir, readFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 
 export type MockRequest = { method: string; path: string }
@@ -33,24 +33,63 @@ export const listsFeatures = (): Promise<string[]> =>
 export const listsAcceptanceCriteria = (feature: string): Promise<string[]> =>
     readdirNames(resolve(mocksDir, feature), isDirectory)
 
-const readResponsesFile = (...segments: string[]): Promise<MockEntry[]> =>
-    readFile(resolve(mocksDir, ...segments, 'responses.json'), 'utf-8')
-        .then(text => (JSON.parse(text) as ResponsesSchema).responses)
+export class MissingResponsesError extends Error {}
+
+const readResponsesFile = async (...segments: string[]): Promise<MockEntry[]> => {
+    const path = resolve(mocksDir, ...segments, 'responses.json')
+
+    const text = await readFile(path, 'utf-8').catch(() => {
+        throw new MissingResponsesError(`Missing responses.json at ${path}`)
+    })
+
+    let schema: ResponsesSchema
+    try {
+        schema = JSON.parse(text) as ResponsesSchema
+    } catch {
+        throw new Error(`Invalid JSON in ${path}`)
+    }
+
+    if (!Array.isArray(schema.responses)) {
+        throw new Error(`Invalid schema in ${path}: expected { "responses": [...] }`)
+    }
+
+    return schema.responses
+}
 
 const loadSharedResponses = (): Promise<MockEntry[]> =>
-    readResponsesFile(SHARED_DIR).catch(() => [])
+    readResponsesFile(SHARED_DIR).catch(error =>
+        error instanceof MissingResponsesError ? [] : Promise.reject(error))
 
 const sameEndpoint = (a: MockEntry, b: MockEntry): boolean =>
     a.request.method === b.request.method && a.request.path === b.request.path
 
 export const loadResponses = async (feature: string, ac: string): Promise<MockEntry[]> => {
-    const acEntries = await readResponsesFile(feature, ac).catch(() => {
-        throw new Error('Not found responses.json file')
-    })
+    const acEntries = await readResponsesFile(feature, ac)
     const sharedEntries = await loadSharedResponses()
 
     return [
         ...acEntries,
         ...sharedEntries.filter(shared => !acEntries.some(entry => sameEndpoint(entry, shared))),
     ]
+}
+
+const EXAMPLE_MOCKS: [string[], ResponsesSchema][] = [
+    [[SHARED_DIR], {
+        responses: [
+            { request: { method: 'GET', path: '/api/health' }, response: { status: 200, body: { status: 'ok' } } },
+        ],
+    }],
+    [['example-feature', 'ac-01-example-successfully'], {
+        responses: [
+            { request: { method: 'GET', path: '/api/example' }, response: { status: 200, body: { message: 'Hello from feature-mock' } } },
+        ],
+    }],
+]
+
+export const createExampleMocks = async (): Promise<void> => {
+    for (const [segments, schema] of EXAMPLE_MOCKS) {
+        const dir = resolve(mocksDir, ...segments)
+        await mkdir(dir, { recursive: true })
+        await writeFile(resolve(dir, 'responses.json'), `${JSON.stringify(schema, null, 2)}\n`)
+    }
 }

@@ -6,5 +6,13 @@ export {
     setActiveServer,
     stopActiveServer,
 } from './services/state-manager'
-export { listsFeatures, listsAcceptanceCriteria, loadResponses } from './utils/fs'
+export {
+    MissingResponsesError,
+    createExampleMocks,
+    getMocksDir,
+    listsAcceptanceCriteria,
+    listsFeatures,
+    loadResponses,
+    setMocksDir,
+} from './utils/fs'
 export type { MockEntry, MockRequest, MockResponse, ResponsesSchema } from './utils/fs'
