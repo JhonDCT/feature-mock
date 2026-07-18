@@ -1,6 +1,6 @@
 {
   "name": "feature-mock",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "CLI mock server with TUI for feature-driven development",
   "type": "module",
   "module": "dist/index.js",
