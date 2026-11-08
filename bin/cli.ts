@@ -1,4 +1,4 @@
-#!/usr/bin/env bun
+#!/usr/bin/env node
 import pkg from '../package.json'
 import { startCommand } from '../src/commands/start.command'
 import { setPort } from '../src/services/mock-server'

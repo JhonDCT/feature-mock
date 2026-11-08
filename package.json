@@ -10,6 +10,7 @@
   },
   "exports": {
     ".": {
+      "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     }
@@ -18,31 +19,33 @@
     "dist"
   ],
   "scripts": {
-    "start": "bun src/index.ts",
-    "dev": "bun --hot bin/cli.ts",
-    "build": "bun run scripts/build.ts",
-    "prepublishOnly": "bun run build"
+    "start": "node dist/cli.js",
+    "dev": "tsx watch bin/cli.ts",
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.12.0"
   },
   "keywords": [
     "mock",
     "feature",
     "tui",
     "cli",
-    "bun",
     "acceptance-criteria",
-    "mock-server"
+    "mock-server",
+    "node"
   ],
   "license": "MIT",
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
   "dependencies": {
     "@clack/prompts": "^1.6.0"
+  },
+  "types": "dist/index.d.ts",
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "tsup": "^9.0.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.3"
   }
 }

@@ -5,9 +5,9 @@ A CLI mock server with an interactive TUI for feature-driven development. Select
 ## Installation
 
 ```sh
-bun add -g feature-mock
-# or
 npm install -g feature-mock
+# or run it without installing
+npx feature-mock
 ```
 
 ## Usage
@@ -94,7 +94,16 @@ mocks/
 
 ## Requirements
 
-- [Bun](https://bun.com) >= 1.0.0
+- [Node.js](https://nodejs.org) >= 20.12.0
+
+## Development
+
+```sh
+npm install
+npm run dev        # run the CLI from source with tsx (watch mode)
+npm run build      # bundle to dist/ with tsup
+npm run typecheck  # tsc --noEmit
+```
 
 ## License
 
